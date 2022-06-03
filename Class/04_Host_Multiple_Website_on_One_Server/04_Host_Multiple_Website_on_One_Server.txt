@@ -1,0 +1,30 @@
+-> https://www.codewithharry.com/blogpost/host-multiple-websites-ubuntu-vps
+
+
+-> sudo htop (to see windows like task-manager)
+
+*) Steps:
+    -> first go to domain provider dns a record like:
+        -> dns a record GoDaddy
+        -> and link given domain with that vps ip address
+    Step 1: Create Directories for individual site:
+        ->  sudo mkdir -p /var/www/example1.com/ (now all the file that we put inside this directory will associated to 'example1.com' domain)
+            -> cd /var/www/example1.com/
+            -> sudo vim index.html
+                -> add some html file
+        -> sudo mkdir -p /var/www/example2.com/
+    Step 2: Transfer the site contents
+        -> ex: index.html
+    Step 3: Creating the virtualHost files
+        ->  sudo vim /etc/apache2/sites-available/example1.com.conf
+            ->  <VirtualHost *:80>
+                    ServerName example1.com
+                    ServerAlias www.example1.com
+                    ServerAdmin hello@email.com
+                    DocumentRoot /var/www/example1.com
+                    ErrorLog ${APACHE_LOG_DIR}/error.log
+                    CustomLog ${APACHE_LOG_DIR}/access.log combined
+                </VirtualHost>
+    Step 4: Enable the VirtualHosts
+        -> sudo a2ensite example1.com.conf
+        -> sudo service apache2 restart (after that restart the apache2 server)

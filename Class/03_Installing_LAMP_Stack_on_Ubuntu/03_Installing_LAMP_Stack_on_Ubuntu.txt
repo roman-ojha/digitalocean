@@ -1,0 +1,26 @@
+-> https://www.codewithharry.com/blogpost/lamp-stack-ubuntu-20-04
+*) LAMP:
+    -> Linux-Apache-MySQL-PHP
+
+*) Steps:
+    -> sudo apt update (to update package list)
+    -> sudo apt install apache2 (to install apache2)
+    -> sudo ufw allow in "Apache Full" (we are giving permission to apache2 from firewall)
+        -> after this if we will search 'http://<droplet_server_ip>/' in browser then we will see the page
+    -> sudo ufw status (if you want to see what we have allowed from firewall)
+    -> sudo apt install mysql-server (install mysql)
+    -> sudo mysql (enter mysql console)
+        -> exit (exit from console)
+    -> sudo apt install php libapache2-mod-php php-mysql (install php)
+        *> php -  installs PHP
+        *> libapache2-mod-php - Used by apache to handle PHP files
+        *> php-mysql - PHP module that allows PHP to connect to MySQL 
+    -> php -v (to check php version)
+
+*) Demonstration:
+    -> cd /var/www/html
+    -> vim index.html
+        -> edit html file
+    -> sudo service apache2 restart  (to restart apache2 server)
+        -> after this if we will search 'http://<droplet_server_ip>/' in browser then we will see the change that we have done in page
+        -> it means that now we can paste our static site using FileZilla to this directory and we can access that site

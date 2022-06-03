@@ -1,0 +1,22 @@
+-> https://www.codewithharry.com/blogpost/setup-ubuntu-20-04-server
+
+*) VPS:
+    -> virtual private server
+
+*) VPS/server means in digitalOcean is droplets
+
+NOTE: recommended to not login through root user most of the time rather login through added user on server and put strong password for rootUser login 
+
+*) Command:
+    -> ssh root@<your_server_id> (initial root user login)
+    -> adduser <new_user> (to create non root user)
+    -> usermod -a -G sudo <non_root_user_name> (to give access of root-user like privilege)
+    -> ssh <new_user>@<your_server_id> (login through new_user)
+    -> exit (logout)
+    *) Firewall setup:
+        -> ufw allow OpenSSH (to allow open ssh)
+        -> ufw enable (to active firewall)
+    *) To elevate you access to server by other user
+        -> first login through that user that we have give access by root-user
+        -> sudo su
+            -> now you can 'cd root/'

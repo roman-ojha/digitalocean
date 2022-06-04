@@ -1,0 +1,43 @@
+-> https://www.codewithharry.com/blogpost/get-https-ubuntu-using-lets-encrypt
+
+*) LEMP:
+    -> Linux, Nginx(Engine-x), MySQL, PHP
+
+NOTE: recommended is that rather install apache or Nginx in you server
+-> so it means that we have to destroy previously install all the stuff
+-> we will rebuild digitalocean droplet
+    -> go to destroy tab on droplet and rebuild droplet
+
+-> after that:
+    -> ssh-keygen -R <host_ip> (to remove all keys belonging to hostname)
+    * Now repeat all the process learned in above tutorial to setup droplet (tut_01,tut_02)
+
+*) LEMP install step:
+    -> sudo apt update
+    -> sudo apt install nginx
+    -> sudo ufw app list (to see available app)
+    -> sudo ufw allow 'Nginx Full' (allow nginx over firewall)
+    -> sudo apt install mysql-server
+ (to install mysql)
+    -> sudo mysql (to open mysql console)
+    -> sudo apt install php-fpm php-mysql (install php)
+
+*) Config/setup:
+    -> cd /var/www
+    -> cd html
+    -> sudo vim index.php
+        -> <?php
+            echo "hello world";
+            ?>
+    -> cd /etc/nginx/sites-available/
+    -> vim default (and edit)
+        ->  # Add index.php to the list if you are using PHP
+        index index.php index.html index.htm index.nginx-debian.html;
+        location ~ \.php$ {
+                fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+                include fastcgi_params;
+                fastcgi_index index.php;
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+    -> sudo service nginx restart
+        *> now you can access this php site using digitalocean droplet/vps ip

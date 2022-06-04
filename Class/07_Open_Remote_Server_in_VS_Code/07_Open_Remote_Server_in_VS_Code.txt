@@ -1,0 +1,17 @@
+*) Extension:
+    -> Remote - SSH
+    -> Remote - SSH: Editing Configuration Files
+
+*) Steps:
+    -> open command palette:
+        -> Remote-SSH: Open Configuration Files and write:
+            ->  Host digitaloceantesting
+                HostName 128.199.19.235 # add HostName/ipAddress of the server
+                User roman
+                # PORT: <if_required>
+                IdentityFile "C:\Users\Razz Roman\.ssh\id_rsa" # add ssh path
+        -> Remote-SSH: Connect to Host
+            -> select digitaloceantesting
+    -> open terminal:
+        -> python3 -m http.server (provide on browser)
+            *> here this is forwarding post from localhost:<port> -> VPS <port>

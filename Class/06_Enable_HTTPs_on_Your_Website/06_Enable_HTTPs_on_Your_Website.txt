@@ -1,0 +1,11 @@
+-> https://www.codewithharry.com/blogpost/get-https-ubuntu-using-lets-encrypt
+
+*) get free https on your site using Let's Encrypt SSL 
+    -> sudo apt install certbot python3-certbot-apache
+        *> certbot: will renew certificate automatically
+        *> python3-certbot-apache
+    -> sudo ufw allow 'Apache Full' (allowing apache through firewall)
+    -> sudo certbot --apache (obtain as SSL certificate)
+    -> sudo service apache2 restart
+    -> sudo systemctl status certbot.timer (to see SSL certificate detail)
+    -> sudo certbot renew --dry-run (dry running of renew certificate)

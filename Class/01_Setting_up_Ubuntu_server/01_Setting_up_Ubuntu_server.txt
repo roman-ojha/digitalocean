@@ -11,6 +11,7 @@ NOTE: recommended to not login through root user most of the time rather login t
     -> ssh root@<your_server_id> (initial root user login)
     -> adduser <new_user> (to create non root user)
     -> usermod -a -G sudo <non_root_user_name> (to give access of root-user like privilege)
+    -> exit
     -> ssh <new_user>@<your_server_id> (login through new_user)
     -> exit (logout)
     *) Firewall setup:

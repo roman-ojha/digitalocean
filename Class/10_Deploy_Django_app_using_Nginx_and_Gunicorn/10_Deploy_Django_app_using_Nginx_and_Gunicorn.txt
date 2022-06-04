@@ -60,7 +60,8 @@
                             --workers 3 \
                             --bind unix:/run/gunicorn.sock \
                             <project_name>.wsgi:application
-
+                    Restart=always
+                    RestartSec=3
                     [Install]
                     WantedBy=multi-user.target
             -> sudo systemctl start gunicorn.socket (start socket)
@@ -92,3 +93,4 @@
                 -> ALLOWED_HOSTS = ['<droplet_ip_address>','www.example1.com','example1.com']
         -> sudo service nginx restart
         -> sudo service gunicorn restart
+        -> sudo reboot (we can reboot virtual computer as well)

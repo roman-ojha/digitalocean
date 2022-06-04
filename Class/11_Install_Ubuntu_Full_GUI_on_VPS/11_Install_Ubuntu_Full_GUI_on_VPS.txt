@@ -1,0 +1,30 @@
+-> https://www.codewithharry.com/blogpost/install-ubuntu-desktop-vps
+
+*) Step:
+    -> create a high end droplet
+    *) Command on terminal:
+        -> ssh root@<droplet_ip_address>
+        -> adduser roman
+        -> usermod -a -G sudo roman
+        -> apt update
+        -> apt install tasksel (it help to do some task)
+        -> tasksel (to open tasksel)
+            -> select 'Ubuntu desktop'
+        -> systemctl set-default graphical.target (when ever computer will run that we will run GUI)
+        -> apt install xrdp
+        -> systemctl enable xrdp (to enable xrdp)
+        -> systemctl status xrdp (to see status)
+        *) For better experience:
+        -> nano /etc/xrdp/xrdp.ini (and update/edit)
+            ->  max_bpp = 128
+                xserverbpp = 128
+                crypt_level = low
+                use_compression = yes
+        -> sudo reboot
+    *) Connect through remote desktop on windows:
+        -> search for 'remote desktop connection'
+            -> fill:
+                -> Computer: <droplet_ip_address>
+                -> username: <username_of_droplet_os>
+        -> for settings: https://youtu.be/pAczUF4aFxg?list=PLu0W_9lII9aiBNXUisDdSmfNbsKq407XC&t=486
+        -> and connect it

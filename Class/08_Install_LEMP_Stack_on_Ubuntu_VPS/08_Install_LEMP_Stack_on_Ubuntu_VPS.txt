@@ -10,6 +10,7 @@ NOTE: recommended is that rather install apache or Nginx in you server
 
 -> after that:
     -> ssh-keygen -R <host_ip> (to remove all keys belonging to hostname)
+        -> OR you can delete \.ssh\known_hosts file from you main pc
     * Now repeat all the process learned in above tutorial to setup droplet (tut_01,tut_02)
 
 *) LEMP install step:

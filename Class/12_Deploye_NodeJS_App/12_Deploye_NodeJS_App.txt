@@ -1,0 +1,51 @@
+-> https://www.codewithharry.com/blogpost/deploy-nodejs-app-on-ubuntu/
+
+*) Steps:
+    -> create droplet
+    *) On Terminal
+    -> ssh root@<droplet_ip_address>
+        *) Steps 1: Install NodeJS
+            -> curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - (will install nodesource which will help to install nodejs)
+            -> sudo apt-get install -y nodejs (will install nodejs)
+            -> node --version && npm --version (to check version)
+        *) Step 2: Creating a sample nodejs file
+            -> cd ~
+            -> cd /home (recommended is to create new user and create project on that user folder)
+            -> sudo vi app.js:
+                ->  const express = require('express')
+                    const app = express()
+                    const port = 3000
+
+                    app.get('/', (req, res) => {
+                    res.send('Hello World!')
+                    })
+
+                    app.listen(port, () => {
+                    console.log(`Example app listening at http://localhost:${port}`)
+                    })
+            -> npm install express (install express)
+            -> node app.js (run server)
+            -> sudo npm i pm2 -g (we will run nodejs app using pm2)
+                -> pm2 is a process manager which will manage nodejs processes
+            -> pm2 start app.js (to start nodejs app using pm2)
+            -> pm2 restart app.js (to restart nodejs app using pm2)
+        *) Step 3: Configuring Nginx as a reverse proxy
+            -> sudo apt install nginx
+            -> sudo vi /etc/nginx/sites-available/nodeApp (we will create nodeApp file for nginx config):
+                -> server{
+                    server_name <droplet_ip_address>;
+
+                        location / {
+                            proxy_pass http://localhost:3000;
+                            proxy_http_version 1.1;
+                            proxy_set_header Upgrade $http_upgrade;
+                            proxy_set_header Connection 'upgrade';
+                            proxy_set_header Host $host;
+                            proxy_cache_bypass $http_upgrade;
+                        }
+                    }
+            -> sudo ln -s /etc/nginx/sites-available/nodeApp /etc/nginx/sites-enabled (we will enable/activate this configuration)
+            *> now for this tutorial to access directory to browser using ip we will delete default nginx file:
+                -> cd /etc/nginx/sites-enabled/
+                -> rm default
+            -> sudo service nginx restart

@@ -1,0 +1,12 @@
+*) Steps:
+    *) Step 1: install all required package
+    -> sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl
+        -> we are now using apache so we will scape config part
+    *) Step 2: config new user for admin
+        -> sudo mysql
+        -> CREATE USER '<user>'@'localhost' IDENTIFIED WITH caching_sha2_password BY '<password>';
+        -> GRANT ALL PRIVILEGES ON *.* TO '<new_user>'@'localhost' WITH GRANT OPTION;
+        -> exit
+    *) Step 3: Create a symlink
+        -> sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+        -> sudo service nginx restart

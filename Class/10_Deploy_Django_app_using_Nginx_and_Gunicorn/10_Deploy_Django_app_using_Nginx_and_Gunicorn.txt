@@ -1,0 +1,36 @@
+-> https://www.codewithharry.com/blogpost/django-deploy-nginx-gunicorn
+
+-> Development server for django is not scalable for production application
+
+*) Gunicorn:
+    -> to host this kind of WSGI application
+
+*) niginx:
+    -> we will use niginx for reverse proxy
+
+*) Steps:
+    *) Steps 1: Installing python and nginx
+        -> sudo apt update
+        -> sudo apt install python3-pip python3-dev nginx
+    *) Steps 2: Creating a python virtual environment
+        -> sudo pip3 install virtualenv
+            -> (virtualenv will help to create isolated environment)
+        -> NOTE: whenever we have to server/host static application like from php app, or from html,css,javascript application then we have to put them in '/var/www', but we will not server django/node app from that directory
+        -> mkdir ~/projectdir
+        -> cd ~/projectdir
+        -> virtualenv env (create virtual environment name 'env')
+        -> source env/bin/activate (activate new environment)
+    *) Step 3: Install Django and gunicorn inside env:
+        -> pip install django gunicorn
+    *) Step 4: Setting up our Django project:
+        -> django-admin startproject textutils ~/projectdir
+        -> sudo vim textutils/settings.py (and update)
+            -> ALLOWED_HOSTS = ['<droplet_ip_address>']
+        -> ~/projectdir/manage.py makemigrations (we will make migration)
+        -> ~/projectdir/manage.py migrate (and get migrate)
+        -> sudo ufw allow 8000 (after that we will allow 8000 port on firewall)
+        -> ~/projectdir/manage.py runserver 0.0.0.0:8000 (run application)
+            -> now we can see on browser: http://<droplet_ip_address>:8000/
+
+
+        

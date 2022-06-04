@@ -29,8 +29,66 @@
         -> ~/projectdir/manage.py makemigrations (we will make migration)
         -> ~/projectdir/manage.py migrate (and get migrate)
         -> sudo ufw allow 8000 (after that we will allow 8000 port on firewall)
-        -> ~/projectdir/manage.py runserver 0.0.0.0:8000 (run application)
+        -> ~/projectdir/manage.py runserver 0.0.0.0:8000 (run development server)
             -> now we can see on browser: http://<droplet_ip_address>:8000/
+    *) Step 4: Configuring gunicorn:
+        -> gunicorn --bind 0.0.0.0:8000 textutils.wsgi (run production server)
+        *) To manage application so that it would now go down we have to configure:
+            -> deactivate (deactivate virtual environment 'env')
+        *) we will create socket file so that our gunicorn service automatically get restart
+            -> sudo vim /etc/systemd/system/gunicorn.socket (and write):
+                ->  [Unit]
+                    Description=gunicorn socket
 
+                    [Socket]
+                    ListenStream=/run/gunicorn.sock
 
-        
+                    [Install]
+                    WantedBy=sockets.target
+            -> sudo vim /etc/systemd/system/gunicorn.service
+                -> [Unit]
+                    Description=gunicorn daemon
+                    Requires=gunicorn.socket
+                    After=network.target
+
+                    [Service]
+                    User=<droplet_new/root_user>
+                    Group=www-data
+                    WorkingDirectory=/home/<droplet_new/root_user>/projectdir
+                    ExecStart=/home/<droplet_new/root_user>/projectdir/env/bin/gunicorn \
+                            --access-logfile - \
+                            --workers 3 \
+                            --bind unix:/run/gunicorn.sock \
+                            <project_name>.wsgi:application
+
+                    [Install]
+                    WantedBy=multi-user.target
+            -> sudo systemctl start gunicorn.socket (start socket)
+            -> sudo systemctl enable gunicorn.socket
+    *) Step 5: Configuring Nginx as a reverse proxy
+        -> sudo vim /etc/nginx/sites-available/textutils (we will create file called 'textutils')
+            -> server {
+                    listen 80;
+                    server_name www.example1.com;
+
+                    location = /favicon.ico { access_log off; log_not_found off; }
+                    location /static/ {
+                        root /home/<droplet_new/root_user>/projectdir;
+                    }
+
+                    location / {
+                        include proxy_params;
+                        proxy_pass http://unix:/run/gunicorn.sock;
+                    }
+                }
+        -> sudo ln -s /etc/nginx/sites-available/textutils /etc/nginx/sites-enabled/
+        -> sudo systemctl restart nginx
+        *) we might also have to remove default site for this tutorial so that the app that create would because the default site:
+            -> cd /etc/nginx/sites-enabled/
+            -> sudo rm default
+        *) We also have to add host url to 'ALLOWED_HOSTS' in settings.py:
+            -> cd ~/projectdir/textutils/
+            -> sudo vim settings.py
+                -> ALLOWED_HOSTS = ['<droplet_ip_address>','www.example1.com','example1.com']
+        -> sudo service nginx restart
+        -> sudo service gunicorn restart
